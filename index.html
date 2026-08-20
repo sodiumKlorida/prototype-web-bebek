@@ -1,0 +1,334 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bebek Tech POS - Admin Theme</title>
+    <!-- Menggunakan Tailwind versi 4 dari CDN sesuai permintaan -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-gray-200">
+    <!-- OVERLAY PERINGATAN MOBILE (Otomatis muncul di layar HP / < 768px) -->
+    <div
+        class="fixed inset-0 z-50 bg-slate-900 text-white flex flex-col items-center justify-center p-6 text-center md:hidden">
+        <div
+            class="w-20 h-20 bg-rose-500/10 border border-rose-500/20 text-rose-500 rounded-3xl flex items-center justify-center mb-5 text-4xl shadow-lg">
+            <i class="fa-solid fa-desktop"></i>
+        </div>
+        <h2 class="text-xl font-bold text-white mb-2">Tampilan Mobile Tidak Didukung</h2>
+        <p class="text-sm text-slate-400 max-w-xs leading-relaxed mb-6">
+            Sistem **TourAdmin** dirancang khusus untuk layar komputer atau laptop agar pengelolaan data pemesanan lebih
+            optimal dan nyaman.
+        </p>
+        <div
+            class="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-slate-800 text-xs font-semibold text-slate-300 border border-slate-700">
+            <i class="fa-solid fa-laptop text-emerald-400"></i>
+            <span>Harap buka halaman ini menggunakan Desktop / Laptop</span>
+        </div>
+    </div>
+
+    <div class="relative w-full h-screen overflow-hidden">
+
+        <!-- ========================================== -->
+        <!-- 1. SIDEBAR (PARENT & CHILD)      -->
+        <!-- ========================================== -->
+        <div id="sidebarParent" class="absolute top-4 left-4 bottom-4 w-64 z-20 transition-transform duration-300 ease-in-out">
+            <aside class="w-full h-full bg-gray-800 text-white flex flex-col rounded-xl shadow-2xl overflow-hidden">
+                <h1 class="text-2xl font-bold p-6 border-b border-gray-700 cursor text-yellow-400">BebekTech POS</h1>
+                <nav class="flex flex-col p-4 gap-2 flex-1">
+                    <a href="index.html" class="px-4 py-2 bg-gray-700 rounded transition-colors font-semibold">Kasir (POS)</a>
+                    <a href="riwayat_transaksi.html" class="px-4 py-2 hover:bg-gray-700 rounded transition-colors text-gray-300">Riwayat Transaksi</a>
+                    <a href="menu.html" class="px-4 py-2 hover:bg-gray-700 rounded transition-colors text-gray-300">Manajemen Menu</a>
+                    <a href="laporan.html" class="px-4 py-2 hover:bg-gray-700 rounded transition-colors text-gray-300">Laporan</a>
+                </nav>
+            </aside>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 2. HEADER (PARENT & CHILD)       -->
+        <!-- ========================================== -->
+        <div id="headerParent" class="absolute top-4 left-72 right-4 h-16 z-10 transition-all duration-300 ease-in-out">
+            <header class="w-full h-full bg-white rounded-xl shadow-lg px-6 flex justify-between items-center cursor">
+                <!-- TOMBOL TOGGLE SIDEBAR DI KIRI HEADER -->
+                <div class="flex items-center gap-4">
+                    <button id="toggleBtn" class="p-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors cursor-pointer text-gray-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                    <!-- Menampilkan waktu live secara sederhana -->
+                    <h4 class="text-gray-500 font-medium hidden sm:block" id="liveTime">17:00</h4>
+                </div>
+
+                <!-- BAGIAN KANAN: Skeleton & Teks Asli -->
+                <div>
+                    <!-- Skeleton Loader untuk "Halo Admin" -->
+                    <div id="headerSkeleton" class="h-5 w-24 bg-gray-200 rounded animate-pulse"></div>
+                    <!-- Teks Asli -->
+                    <h4 id="headerActual" class="font-semibold text-gray-700 hidden">Halo, Kasir 01</h4>
+                </div>
+            </header>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 3. CONTENT AREA (PARENT & CHILD)[cite: 1] -->
+        <!-- ========================================== -->
+        <div id="contentParent" class="absolute top-24 left-72 right-4 bottom-4 z-0 transition-all duration-300 ease-in-out">
+
+            <main class="w-full h-full bg-white rounded-xl shadow-lg border border-gray-100 p-6 flex flex-col">
+
+                <!-- ACTION BAR (Search & Kategori) -->
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-4">
+                    
+                    <!-- KIRI: Search Menu -->
+                    <div class="relative w-full sm:w-72">
+                        <input type="text" placeholder="Cari menu (Bebek, Ayam...)" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                        <svg class="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </div>
+
+                    <!-- KANAN: Filter Kategori Cepat -->
+                    <div class="flex items-center gap-2 w-full sm:w-auto overflow-x-auto pb-2 sm:pb-0">
+                        <button class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg shadow-sm whitespace-nowrap">Semua Menu</button>
+                        <button class="px-4 py-2 bg-white border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition whitespace-nowrap">Makanan</button>
+                        <button class="px-4 py-2 bg-white border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition whitespace-nowrap">Minuman</button>
+                    </div>
+                </div>
+
+                <!-- WADAH UTAMA POS (Relatif untuk menampung Skeleton & Konten Asli) -->
+                <div class="relative flex-1 rounded-lg overflow-hidden flex h-full">
+
+                    <!-- ======================================================== -->
+                    <!-- SKELETON LOADER POS (Grid & Cart)[cite: 1]              -->
+                    <!-- ======================================================== -->
+                    <div id="skeletonLoader" class="absolute inset-0 z-10 bg-white flex flex-col lg:flex-row gap-6 w-full h-full pb-2">
+                        <!-- Skeleton Grid Produk -->
+                        <div class="flex-1 grid grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-max h-full overflow-hidden">
+                            <div class="h-32 bg-gray-200 rounded-xl animate-pulse"></div>
+                            <div class="h-32 bg-gray-200 rounded-xl animate-pulse"></div>
+                            <div class="h-32 bg-gray-200 rounded-xl animate-pulse"></div>
+                            <div class="h-32 bg-gray-200 rounded-xl animate-pulse"></div>
+                            <div class="h-32 bg-gray-200 rounded-xl animate-pulse"></div>
+                            <div class="h-32 bg-gray-200 rounded-xl animate-pulse"></div>
+                        </div>
+                        <!-- Skeleton Cart -->
+                        <div class="w-full lg:w-96 bg-gray-100 border border-gray-200 rounded-xl animate-pulse h-full"></div>
+                    </div>
+
+                    <!-- ======================================================== -->
+                    <!-- ACTUAL POS CONTENT (Tampil setelah 2 detik)              -->
+                    <!-- ======================================================== -->
+                    <div id="actualData" class="flex flex-col lg:flex-row w-full h-full gap-6 opacity-0 transition-opacity duration-500 absolute inset-0 z-0 pb-2">
+                        
+                        <!-- KIRI: GRID MENU PRODUK -->
+                        <div class="flex-1 overflow-y-auto pr-2 pb-16 lg:pb-0">
+                            <div id="productGrid" class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                                <!-- Kartu produk akan di-render di sini oleh JavaScript -->
+                            </div>
+                        </div>
+
+                        <!-- KANAN: KERANJANG PESANAN (CART) -->
+                        <div class="w-full lg:w-[350px] bg-gray-50 border border-gray-200 rounded-xl flex flex-col shadow-sm h-full overflow-hidden shrink-0">
+                            
+                            <!-- Header Form Pemesanan -->
+                            <div class="p-4 border-b border-gray-200 bg-white">
+                                <h3 class="font-bold text-gray-800 mb-3 text-lg">Detail Pesanan</h3>
+                                <div class="space-y-3">
+                                    <select id="serviceType" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+                                        <option value="Dine In">Dine In (Makan Sini)</option>
+                                        <option value="Take Away">Take Away (Bungkus)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- List Item di Keranjang (Scrollable) -->
+                            <div id="cartList" class="flex-1 overflow-y-auto p-4 space-y-3">
+                                <div id="emptyCart" class="text-center text-gray-400 mt-10">
+                                    <svg class="w-12 h-12 mx-auto text-gray-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                                    <p class="text-sm">Keranjang masih kosong</p>
+                                </div>
+                                <!-- Item keranjang akan ditambahkan di sini -->
+                            </div>
+
+                            <!-- Bagian Bawah: Total & Checkout -->
+                            <div class="p-4 border-t border-gray-200 bg-white mt-auto">
+                                <div class="flex justify-between items-center mb-3">
+                                    <span class="font-semibold text-gray-600 text-sm">Total Tagihan</span>
+                                    <span id="totalPrice" class="font-bold text-xl text-blue-600">Rp 0</span>
+                                </div>
+                                <button id="checkoutBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg shadow transition disabled:bg-gray-300 disabled:cursor-not-allowed" disabled>
+                                    Proses Pembayaran
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- SCRIPT JAVASCRIPT                          -->
+    <!-- ========================================== -->
+    <script>
+        // --- 1. SKRIP ANIMASI LAYOUT THEME (Dari Kode Asli)[cite: 1] ---
+        const toggleBtn = document.getElementById('toggleBtn');
+        const sidebarParent = document.getElementById('sidebarParent');
+        const headerParent = document.getElementById('headerParent');
+        const contentParent = document.getElementById('contentParent');
+
+        let isSidebarOpen = true;
+        toggleBtn?.addEventListener('click', () => {
+            isSidebarOpen = !isSidebarOpen;
+            if (isSidebarOpen) {
+                sidebarParent.classList.remove('-translate-x-[150%]');
+                headerParent.classList.replace('left-4', 'left-72');
+                contentParent.classList.replace('left-4', 'left-72');
+            } else {
+                sidebarParent.classList.add('-translate-x-[150%]');
+                headerParent.classList.replace('left-72', 'left-4');
+                contentParent.classList.replace('left-72', 'left-4');
+            }
+        });
+
+        // Set waktu sederhana di header[cite: 1]
+        const updateTime = () => {
+            const now = new Date();
+            document.getElementById('liveTime').innerText = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+        };
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        // --- 2. SKRIP SKELETON LOADER[cite: 1] ---
+        window.addEventListener('DOMContentLoaded', () => {
+            const tableSkeleton = document.getElementById('skeletonLoader');
+            const tableActualData = document.getElementById('actualData');
+            const headerSkeleton = document.getElementById('headerSkeleton');
+            const headerActual = document.getElementById('headerActual');
+
+            // Delay 2 detik simulasi loading database
+            setTimeout(() => {
+                tableSkeleton.classList.add('hidden');
+                headerSkeleton.classList.add('hidden');
+                tableActualData.classList.remove('opacity-0');
+                tableActualData.classList.add('z-20'); // Angkat posisi konten
+                headerActual.classList.remove('hidden');
+            }, 2000);
+        });
+
+        // --- 3. SKRIP LOGIKA POS (KASIR) ---
+        const products = [
+            { id: 1, name: 'Bebek Goreng Kremes', price: 35000, img: '🦆' },
+            { id: 2, name: 'Bebek Bakar Madu', price: 38000, img: '🦆' },
+            { id: 3, name: 'Ayam Goreng Lengkuas', price: 25000, img: '🍗' },
+            { id: 4, name: 'Ayam Bakar Rica', price: 27000, img: '🍗' },
+            { id: 5, name: 'Pecel Lele Jumbo', price: 18000, img: '🐟' },
+            { id: 6, name: 'Nasi Putih Panas', price: 5000, img: '🍚' },
+            { id: 7, name: 'Es Teh Manis', price: 5000, img: '🍹' },
+            { id: 8, name: 'Es Jeruk Peras', price: 8000, img: '🍊' },
+            { id: 9, name: 'Tahu / Tempe Goreng', price: 4000, img: '🧆' }
+        ];
+
+        let cart = []; 
+
+        function renderProducts() {
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = ''; 
+
+            products.forEach(product => {
+                const card = document.createElement('div');
+                // Styling kartu produk mengikuti tema yang bersih
+                card.className = "bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:border-blue-300 hover:shadow-md transition cursor-pointer flex flex-col items-center text-center group";
+                card.onclick = () => addToCart(product.id);
+
+                card.innerHTML = `
+                    <div class="text-4xl mb-3 group-hover:scale-110 transition-transform">${product.img}</div>
+                    <h4 class="font-semibold text-sm text-gray-800 mb-1 leading-tight">${product.name}</h4>
+                    <p class="text-blue-600 font-bold text-sm">Rp ${product.price.toLocaleString('id-ID')}</p>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            const existingItem = cart.find(item => item.id === productId);
+
+            if (existingItem) {
+                existingItem.qty += 1; 
+            } else {
+                cart.push({ ...product, qty: 1 }); 
+            }
+            renderCart();
+        }
+
+        function changeQty(productId, delta) {
+            const itemIndex = cart.findIndex(item => item.id === productId);
+            if (itemIndex > -1) {
+                cart[itemIndex].qty += delta;
+                if (cart[itemIndex].qty <= 0) {
+                    cart.splice(itemIndex, 1); 
+                }
+            }
+            renderCart();
+        }
+
+        function renderCart() {
+            const cartList = document.getElementById('cartList');
+            const emptyCart = document.getElementById('emptyCart');
+            const totalPriceEl = document.getElementById('totalPrice');
+            const checkoutBtn = document.getElementById('checkoutBtn');
+
+            // Hapus isi cart (kecuali div empty state)
+            cartList.querySelectorAll('.cart-item').forEach(el => el.remove());
+            let total = 0;
+
+            if (cart.length === 0) {
+                emptyCart.style.display = 'block';
+                checkoutBtn.disabled = true;
+            } else {
+                emptyCart.style.display = 'none';
+                checkoutBtn.disabled = false;
+
+                cart.forEach(item => {
+                    const subtotal = item.price * item.qty;
+                    total += subtotal;
+
+                    const div = document.createElement('div');
+                    div.className = "cart-item flex justify-between items-center bg-white p-3 rounded-lg border border-gray-100 shadow-sm";
+                    div.innerHTML = `
+                        <div class="flex-1 pr-2">
+                            <h5 class="text-sm font-bold text-gray-800 leading-tight">${item.name}</h5>
+                            <p class="text-xs text-gray-500 mt-1">Rp ${item.price.toLocaleString('id-ID')}</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="changeQty(${item.id}, -1)" class="w-6 h-6 bg-gray-100 rounded flex items-center justify-center font-bold text-gray-600 hover:bg-blue-100 hover:text-blue-600 transition">-</button>
+                            <span class="text-sm font-bold w-4 text-center">${item.qty}</span>
+                            <button onclick="changeQty(${item.id}, 1)" class="w-6 h-6 bg-blue-50 border border-blue-100 rounded flex items-center justify-center font-bold text-blue-600 hover:bg-blue-600 hover:text-white transition">+</button>
+                        </div>
+                    `;
+                    cartList.appendChild(div);
+                });
+            }
+            totalPriceEl.innerText = `Rp ${total.toLocaleString('id-ID')}`;
+        }
+
+        document.getElementById('checkoutBtn').addEventListener('click', () => {
+            const name = document.getElementById('customerName').value || "Pelanggan Biasa";
+            const service = document.getElementById('serviceType').value;
+            
+            alert(`✅ TRANSAKSI BERHASIL!\n\nNama: ${name}\nTipe: ${service}\nTotal Tagihan: ${document.getElementById('totalPrice').innerText}\n\nPesanan sedang disiapkan ke dapur.`);
+            
+            cart = [];
+            document.getElementById('customerName').value = '';
+            renderCart();
+        });
+
+        // Inisialisasi Produk
+        renderProducts();
+    </script>
+</body>
+</html>
