@@ -2,7 +2,7 @@
 
 Sistem Point of Sale (POS) dan Dashboard Admin modern yang dirancang khusus untuk operasional restoran cepat saji (khususnya menu spesialis bebek dan olahan nusantara). Dibangun dengan fokus pada kecepatan transaksi kasir, antarmuka yang bersih (*clean UI*), serta navigasi interaktif ala perusahaan teknologi masa kini.
 
-🔗 **Live Demo:** [Demo website](https://prototype-web-bebek.vercel.app/)[cite: 1]
+🔗 **Live Demo:** [Demo website](https://prototype-web-bebek.vercel.app/)
 
 ---
 
